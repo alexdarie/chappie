@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHRef="/tabs"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Create new recipe</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCreate()"
+        ><ion-icon name="checkmark-circle-outline"></ion-icon
+      ></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-progress-bar *ngIf="showProgressBar" type="indeterminate" reversed="true"></ion-progress-bar>
+  <ion-list style="margin-bottom: 2rem;">
+    <ion-item-divider>
+      <ion-label>
+        Recipe information
+      </ion-label>
+    </ion-item-divider>
+
+    <ion-item>
+      <ion-label position="floating">Name</ion-label>
+      <ion-input [(ngModel)]="canvasItem.name" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Details</ion-label>
+      <ion-input [(ngModel)]="canvasItem.details" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Time</ion-label>
+      <ion-input [(ngModel)]="canvasItem.time" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Type</ion-label>
+      <ion-input [(ngModel)]="canvasItem.type" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Rating</ion-label>
+      <ion-input [(ngModel)]="canvasItem.rating" type="number" required></ion-input>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
