@@ -1,0 +1,300 @@
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["home-home-module"],{
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/home/home.page.html":
+/*!***************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/home/home.page.html ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>Vanor</ion-title>\n    <ion-buttons slot=\"primary\">\n      <ion-button [routerLink]=\"['/tabs/home/notif']\">\n        <ion-icon name=\"notifications-outline\" slot=\"icon-only\"></ion-icon>\n      </ion-button>\n    </ion-buttons>\n  </ion-toolbar>\n  <ion-toolbar color=\"primary\">\n    <ion-segment [(ngModel)]=\"currentSegment\" (ionChange)=\"segmentChanged($event)\">\n      <ion-segment-button value=\"live\">\n        <ion-label>Live</ion-label>\n      </ion-segment-button>\n      <ion-segment-button value=\"explore\">\n        <ion-label>Habits</ion-label>\n      </ion-segment-button>\n    </ion-segment>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div *ngIf=\"currentSegment === 'live'\">\n    <ion-list>\n      <ion-list-header>\n        <ion-label>Weather availability</ion-label>\n      </ion-list-header>\n      <div>\n        <ion-item lines=\"none\" style=\"width: 115vw; margin: auto; margin-top: -7px\">\n          <google-chart [data]=\"chart3\"\n          style=\"width: 115vw; margin-left: -7.5vw;\"\n          ></google-chart>\n        </ion-item>\n      </div>\n      <div>\n        <ion-item lines=\"none\" style=\"width: 115vw; margin: auto; margin-top: -15px\">\n          <google-chart [data]=\"chart4\"\n          style=\"width: 115vw; margin-left: -7.5vw;\"\n          ></google-chart>\n        </ion-item>\n      </div>\n      <div>\n        <ion-item lines=\"none\" style=\"width: 115vw; margin: auto; margin-top: -15px\">\n          <google-chart [data]=\"chart5\"\n          style=\"width: 115vw; margin-left: -7.5vw;\"\n          ></google-chart>\n        </ion-item>\n      </div>\n    </ion-list>\n\n    <ion-list>\n      <ion-item lines=\"none\" style=\"margin-right: 15px; margin-top: -10px;\">\n        <div style=\"margin: 0 15px 0 15px; font-size: 13px\">\n          Extreme weather can lead your to serious injuries, so keep yourself out of the danger by practicing outdoor sports when the weather allows it safely.\n        </div>       \n        <ion-icon name=\"star\"></ion-icon>\n      </ion-item>\n    </ion-list>\n  </div>\n\n  <div *ngIf=\"currentSegment === 'explore'\" style=\"height: 100%; width: 100%\">\n    <ion-slides pager=\"true\" [options]=\"slideOpts\">\n      <ion-slide>\n        <h1>Outside activities</h1>\n        <p>weather you like while running or cycling</p>\n        <ion-card-content>\n          <div><canvas id=\"barChart\" width=\"600\" height=\"400\"></canvas></div>\n        </ion-card-content>\n      </ion-slide>\n      <ion-slide>\n        <p style=\"position: absolute;\"><b>Running</b></p><br>\n        <h3>{{avg_temp}} °C</h3>\n        <p style=\"font-size: 13px; margin-top: -7px\">Habits you developed in your overall time spent <b>running</b>, starting with the temperature, a prediction of distance usually run, starting at a given hour, and the probability to engage in running activities per week-day</p>\n        <ion-item lines=\"none\" style=\"width: 115vw; margin: auto; margin-top: -10px; z-index: -1\">\n          <google-chart [data]=\"chart\"\n          style=\"width: 115vw; margin-left: -7.5vw;\"\n          ></google-chart>\n        </ion-item>\n        <ion-item lines=\"none\" style=\"width: 115vw; margin: auto; margin-top: -7px\">\n          <google-chart [data]=\"chart2\"\n          style=\"width: 115vw; margin-left: -7.5vw;\"\n          ></google-chart>\n        </ion-item>\n        <ion-item lines=\"none\" style=\"margin-left: 15px; margin-right: 15px\">\n          <ion-label>Preferred time interval</ion-label>\n          <ion-badge style=\"margin-right: 5px; background-color: #3171e0;\">7 pm</ion-badge>\n          <p style=\"margin: 0 5px 0 0; padding: 0\">to</p>\n          <ion-badge style=\"margin-right: 10px; background-color: #3171e0;\">9 pm</ion-badge>\n        </ion-item>\n      </ion-slide>\n      <ion-slide>\n        <h1>Inside activities</h1>\n        <p>home activities that fit your lifestyle</p>\n      </ion-slide>\n    </ion-slides>\n  </div>\n</ion-content>"
+
+/***/ }),
+
+/***/ "./src/app/home/home-routing.module.ts":
+/*!*********************************************!*\
+  !*** ./src/app/home/home-routing.module.ts ***!
+  \*********************************************/
+/*! exports provided: HomePageRoutingModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HomePageRoutingModule", function() { return HomePageRoutingModule; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _home_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./home.page */ "./src/app/home/home.page.ts");
+
+
+
+
+const routes = [
+    {
+        path: '',
+        component: _home_page__WEBPACK_IMPORTED_MODULE_3__["HomePage"]
+    },
+    {
+        path: 'notif',
+        loadChildren: () => __webpack_require__.e(/*! import() | notif-notif-module */ "notif-notif-module").then(__webpack_require__.bind(null, /*! ./notif/notif.module */ "./src/app/home/notif/notif.module.ts")).then(m => m.NotifPageModule)
+    }
+];
+let HomePageRoutingModule = class HomePageRoutingModule {
+};
+HomePageRoutingModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
+        imports: [_angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forChild(routes)],
+        exports: [_angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"]],
+    })
+], HomePageRoutingModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/home/home.module.ts":
+/*!*************************************!*\
+  !*** ./src/app/home/home.module.ts ***!
+  \*************************************/
+/*! exports provided: HomePageModule */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HomePageModule", function() { return HomePageModule; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _home_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./home-routing.module */ "./src/app/home/home-routing.module.ts");
+/* harmony import */ var _home_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./home.page */ "./src/app/home/home.page.ts");
+/* harmony import */ var ng2_google_charts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ng2-google-charts */ "./node_modules/ng2-google-charts/fesm2015/ng2-google-charts.js");
+
+
+
+
+
+
+
+
+let HomePageModule = class HomePageModule {
+};
+HomePageModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
+        imports: [
+            _angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"],
+            _home_routing_module__WEBPACK_IMPORTED_MODULE_5__["HomePageRoutingModule"],
+            ng2_google_charts__WEBPACK_IMPORTED_MODULE_7__["Ng2GoogleChartsModule"]
+        ],
+        declarations: [_home_page__WEBPACK_IMPORTED_MODULE_6__["HomePage"]]
+    })
+], HomePageModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/home/home.page.scss":
+/*!*************************************!*\
+  !*** ./src/app/home/home.page.scss ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "/* Custom Skeleton Line Height and Margin */\n.custom-skeleton ion-skeleton-text {\n  line-height: 13px;\n}\n.custom-skeleton ion-skeleton-text:last-child {\n  margin-bottom: 5px;\n}\nion-slides {\n  height: 100%;\n}\n.swiper-slide {\n  display: block;\n}\n.swiper-slide h2 {\n  margin-top: 2.8rem;\n}\n.swiper-slide img {\n  max-height: 50%;\n  max-width: 80%;\n  margin: 60px 0 40px;\n  pointer-events: none;\n}\nb {\n  font-weight: 500;\n}\np {\n  padding: 0 40px;\n  font-size: 14px;\n  line-height: 1.5;\n  color: var(--ion-color-step-600, #60646b);\n}\np b {\n  color: var(--ion-text-color, #000000);\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9hbGV4ZGFyaWUvRG9jdW1lbnRzL3NvbHV0aW9uL3NyYy9hcHAvaG9tZS9ob21lLnBhZ2Uuc2NzcyIsInNyYy9hcHAvaG9tZS9ob21lLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSwyQ0FBQTtBQUNBO0VBQ0ksaUJBQUE7QUNDSjtBREVFO0VBQ0Usa0JBQUE7QUNDSjtBREVFO0VBQ0UsWUFBQTtBQ0NKO0FERUE7RUFDSSxjQUFBO0FDQ0o7QURFQTtFQUNJLGtCQUFBO0FDQ0o7QURFQTtFQUNJLGVBQUE7RUFDQSxjQUFBO0VBQ0EsbUJBQUE7RUFDQSxvQkFBQTtBQ0NKO0FERUE7RUFDSSxnQkFBQTtBQ0NKO0FERUE7RUFDSSxlQUFBO0VBQ0EsZUFBQTtFQUNBLGdCQUFBO0VBQ0EseUNBQUE7QUNDSjtBREVBO0VBQ0kscUNBQUE7QUNDSiIsImZpbGUiOiJzcmMvYXBwL2hvbWUvaG9tZS5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBDdXN0b20gU2tlbGV0b24gTGluZSBIZWlnaHQgYW5kIE1hcmdpbiAqL1xuLmN1c3RvbS1za2VsZXRvbiBpb24tc2tlbGV0b24tdGV4dCB7XG4gICAgbGluZS1oZWlnaHQ6IDEzcHg7XG4gIH1cbiAgXG4gIC5jdXN0b20tc2tlbGV0b24gaW9uLXNrZWxldG9uLXRleHQ6bGFzdC1jaGlsZCB7XG4gICAgbWFyZ2luLWJvdHRvbTogNXB4O1xuICB9XG5cbiAgaW9uLXNsaWRlcyB7XG4gICAgaGVpZ2h0OiAxMDAlO1xufSAgIFxuXG4uc3dpcGVyLXNsaWRlIHtcbiAgICBkaXNwbGF5OiBibG9jaztcbn1cblxuLnN3aXBlci1zbGlkZSBoMiB7XG4gICAgbWFyZ2luLXRvcDogMi44cmVtO1xufVxuXG4uc3dpcGVyLXNsaWRlIGltZyB7XG4gICAgbWF4LWhlaWdodDogNTAlO1xuICAgIG1heC13aWR0aDogODAlO1xuICAgIG1hcmdpbjogNjBweCAwIDQwcHg7XG4gICAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG59XG5cbmIge1xuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XG59XG5cbnAge1xuICAgIHBhZGRpbmc6IDAgNDBweDtcbiAgICBmb250LXNpemU6IDE0cHg7XG4gICAgbGluZS1oZWlnaHQ6IDEuNTtcbiAgICBjb2xvcjogdmFyKC0taW9uLWNvbG9yLXN0ZXAtNjAwLCAjNjA2NDZiKTtcbn1cblxucCBiIHtcbiAgICBjb2xvcjogdmFyKC0taW9uLXRleHQtY29sb3IsICMwMDAwMDApO1xufSIsIi8qIEN1c3RvbSBTa2VsZXRvbiBMaW5lIEhlaWdodCBhbmQgTWFyZ2luICovXG4uY3VzdG9tLXNrZWxldG9uIGlvbi1za2VsZXRvbi10ZXh0IHtcbiAgbGluZS1oZWlnaHQ6IDEzcHg7XG59XG5cbi5jdXN0b20tc2tlbGV0b24gaW9uLXNrZWxldG9uLXRleHQ6bGFzdC1jaGlsZCB7XG4gIG1hcmdpbi1ib3R0b206IDVweDtcbn1cblxuaW9uLXNsaWRlcyB7XG4gIGhlaWdodDogMTAwJTtcbn1cblxuLnN3aXBlci1zbGlkZSB7XG4gIGRpc3BsYXk6IGJsb2NrO1xufVxuXG4uc3dpcGVyLXNsaWRlIGgyIHtcbiAgbWFyZ2luLXRvcDogMi44cmVtO1xufVxuXG4uc3dpcGVyLXNsaWRlIGltZyB7XG4gIG1heC1oZWlnaHQ6IDUwJTtcbiAgbWF4LXdpZHRoOiA4MCU7XG4gIG1hcmdpbjogNjBweCAwIDQwcHg7XG4gIHBvaW50ZXItZXZlbnRzOiBub25lO1xufVxuXG5iIHtcbiAgZm9udC13ZWlnaHQ6IDUwMDtcbn1cblxucCB7XG4gIHBhZGRpbmc6IDAgNDBweDtcbiAgZm9udC1zaXplOiAxNHB4O1xuICBsaW5lLWhlaWdodDogMS41O1xuICBjb2xvcjogdmFyKC0taW9uLWNvbG9yLXN0ZXAtNjAwLCAjNjA2NDZiKTtcbn1cblxucCBiIHtcbiAgY29sb3I6IHZhcigtLWlvbi10ZXh0LWNvbG9yLCAjMDAwMDAwKTtcbn0iXX0= */"
+
+/***/ }),
+
+/***/ "./src/app/home/home.page.ts":
+/*!***********************************!*\
+  !*** ./src/app/home/home.page.ts ***!
+  \***********************************/
+/*! exports provided: HomePage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HomePage", function() { return HomePage; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
+
+
+
+let HomePage = class HomePage {
+    constructor(actionSheetController, http) {
+        this.actionSheetController = actionSheetController;
+        this.http = http;
+        this.currentSegment = 'live';
+        this.slideOpts = {
+            initialSlide: 0,
+            speed: 400
+        };
+        this.run_pred = [];
+        this.chart = {
+            chartType: 'SteppedAreaChart',
+            dataTable: [
+                ['Hour', 'Distance prediction'],
+                [0, 0],
+            ],
+            options: {
+                title: 'Distance prediction for every strating hour in a day',
+                hAxis: { title: 'Km' },
+                vAxis: { title: 'Distance prediction' },
+                legend: 'none'
+            },
+        };
+        this.chart2 = {
+            chartType: 'SteppedAreaChart',
+            dataTable: [
+                ['Day', 'Probability'],
+                ['Moday', 12],
+                ['Tuesday', 7],
+                ['Wednesday', 4],
+                ['Thursday', 2],
+                ['Friday', 3],
+                ['Saturday', 14],
+                ['Sunday', 16]
+            ],
+            options: {
+                title: 'Probability to run on a daily basis',
+                hAxis: { title: '', minValue: 0, maxValue: 15 },
+                vAxis: { title: 'Probability', minValue: 0, maxValue: 15 },
+                legend: 'none'
+            },
+        };
+        this.chart3 = {
+            chartType: 'ColumnChart',
+            dataTable: [
+                ['Year', 'Visitations', { role: 'style' }],
+                ['Ideal ambient light', 14, 'color: #76A7FA'],
+                ['Actual ambient light', 22, 'opacity: 0.2'],
+            ],
+            options: {
+                title: 'Comparison between ideal and actual data',
+                hAxis: { title: '', minValue: 0, maxValue: 15 },
+                vAxis: { title: 'Value', minValue: 0, maxValue: 15 },
+                legend: 'none'
+            },
+        };
+        this.chart4 = {
+            chartType: 'ColumnChart',
+            dataTable: [
+                ['Year', 'Visitations', { role: 'style' }],
+                ['Ideal air pressure', 14, 'color: #76A7FA'],
+                ['Actual air pressure', 16, 'opacity: 0.2'],
+            ],
+            options: {
+                title: '',
+                hAxis: { title: '', minValue: 0, maxValue: 15 },
+                vAxis: { title: 'Value', minValue: 0, maxValue: 15 },
+                legend: 'none'
+            },
+        };
+        this.chart5 = {
+            chartType: 'ColumnChart',
+            dataTable: [
+                ['Year', 'Visitations', { role: 'style' }],
+                ['Ideal temperature', 14, 'color: #76A7FA'],
+                ['Actual temperature', 16, 'opacity: 0.2'],
+            ],
+            options: {
+                title: '',
+                hAxis: { title: '', minValue: 0, maxValue: 15 },
+                vAxis: { title: 'Value', minValue: 0, maxValue: 15 },
+                legend: 'none'
+            },
+        };
+    }
+    presentActionSheet() {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+            const actionSheet = yield this.actionSheetController.create({
+                header: 'Albums',
+                buttons: [{
+                        text: 'Delete',
+                        role: 'destructive',
+                        icon: 'trash',
+                        handler: () => {
+                            console.log('Delete clicked');
+                        }
+                    }, {
+                        text: 'Share',
+                        icon: 'share',
+                        handler: () => {
+                            console.log('Share clicked');
+                        }
+                    }, {
+                        text: 'Play (open modal)',
+                        icon: 'arrow-dropright-circle',
+                        handler: () => {
+                            console.log('Play clicked');
+                        }
+                    }, {
+                        text: 'Favorite',
+                        icon: 'heart',
+                        handler: () => {
+                            console.log('Favorite clicked');
+                        }
+                    }, {
+                        text: 'Cancel',
+                        icon: 'close',
+                        role: 'cancel',
+                        handler: () => {
+                            console.log('Cancel clicked');
+                        }
+                    }]
+            });
+            yield actionSheet.present();
+        });
+    }
+    ngOnInit() {
+        const chartDataPromise = this.http.get('http://161.35.76.247:4001/demo').toPromise();
+        chartDataPromise.then((resp) => {
+            console.log(resp);
+            this.avg_temp = resp;
+        });
+        const chartDataPromise2 = this.http.get('http://161.35.76.247:4001/demo2').toPromise();
+        chartDataPromise2.then((resp) => {
+            console.log(resp);
+            this.run_pred.push(['Hour', 'Km']);
+            for (const pair of resp) {
+                this.run_pred.push([pair[1], pair[0]]);
+            }
+            console.log(this.run_pred);
+            this.chart.dataTable = this.run_pred;
+            this.chart.component.draw();
+        });
+    }
+    segmentChanged(event) {
+        console.log(event);
+    }
+};
+HomePage.ctorParameters = () => [
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ActionSheetController"] },
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"] }
+];
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('barChart', { static: false }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
+], HomePage.prototype, "barChart", void 0);
+HomePage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+        selector: 'app-home',
+        template: __webpack_require__(/*! raw-loader!./home.page.html */ "./node_modules/raw-loader/index.js!./src/app/home/home.page.html"),
+        styles: [__webpack_require__(/*! ./home.page.scss */ "./src/app/home/home.page.scss")]
+    }),
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["ActionSheetController"],
+        _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
+], HomePage);
+
+
+
+/***/ })
+
+}]);
+//# sourceMappingURL=home-home-module-es2015.js.map

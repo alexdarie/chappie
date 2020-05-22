@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Client orders</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-divider>
+    <ion-label>
+      Table
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-row style="width: 90%; margin: auto">
+    <ion-col>
+      <ion-item>
+        <ion-label position="floating">Filter by name of the table</ion-label>
+        <ion-input [(ngModel)]="filter"></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-button style="height: 3rem; margin-top: 0.5rem" (click)="filterItems()">
+      Apply
+    </ion-button>
+  </ion-row>
+
+  <ion-item-divider>
+    <ion-label>
+      Orders
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshingSpinner="dots"></ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-list>
+    <ion-card *ngFor="let item of items" [routerLink]="['/tabs/tab3/', item.id]">
+      <ion-card-header>
+        <ion-card-subtitle>{{item.id}}</ion-card-subtitle>
+        <ion-card-title>{{item.details}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>{{item.status}}</ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

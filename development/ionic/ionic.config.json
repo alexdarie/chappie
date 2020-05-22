@@ -1,0 +1,8 @@
+{
+  "name": "Vanor",
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular"
+}

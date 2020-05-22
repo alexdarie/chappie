@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Vanor</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button [routerLink]="['/tabs/home/notif']">
+        <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment [(ngModel)]="currentSegment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="live">
+        <ion-label>Live</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="explore">
+        <ion-label>Habits</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="currentSegment === 'live'">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Weather availability</ion-label>
+      </ion-list-header>
+      <div>
+        <ion-item lines="none" style="width: 115vw; margin: auto; margin-top: -7px">
+          <google-chart [data]="chart3"
+          style="width: 115vw; margin-left: -7.5vw;"
+          ></google-chart>
+        </ion-item>
+      </div>
+      <div>
+        <ion-item lines="none" style="width: 115vw; margin: auto; margin-top: -15px">
+          <google-chart [data]="chart4"
+          style="width: 115vw; margin-left: -7.5vw;"
+          ></google-chart>
+        </ion-item>
+      </div>
+      <div>
+        <ion-item lines="none" style="width: 115vw; margin: auto; margin-top: -15px">
+          <google-chart [data]="chart5"
+          style="width: 115vw; margin-left: -7.5vw;"
+          ></google-chart>
+        </ion-item>
+      </div>
+    </ion-list>
+
+    <ion-list>
+      <ion-item lines="none" style="margin-right: 15px; margin-top: -10px;">
+        <div style="margin: 0 15px 0 15px; font-size: 13px">
+          Extreme weather can lead your to serious injuries, so keep yourself out of the danger by practicing outdoor sports when the weather allows it safely.
+        </div>       
+        <ion-icon name="star"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="currentSegment === 'explore'" style="height: 100%; width: 100%">
+    <ion-slides pager="true" [options]="slideOpts">
+      <ion-slide>
+        <h1>Outside activities</h1>
+        <p>weather you like while running or cycling</p>
+        <ion-card-content>
+          <div><canvas id="barChart" width="600" height="400"></canvas></div>
+        </ion-card-content>
+      </ion-slide>
+      <ion-slide>
+        <p style="position: absolute;"><b>Running</b></p><br>
+        <h3>{{avg_temp}} °C</h3>
+        <p style="font-size: 13px; margin-top: -7px">Habits you developed in your overall time spent <b>running</b>, starting with the temperature, a prediction of distance usually run, starting at a given hour, and the probability to engage in running activities per week-day</p>
+        <ion-item lines="none" style="width: 115vw; margin: auto; margin-top: -10px; z-index: -1">
+          <google-chart [data]="chart"
+          style="width: 115vw; margin-left: -7.5vw;"
+          ></google-chart>
+        </ion-item>
+        <ion-item lines="none" style="width: 115vw; margin: auto; margin-top: -7px">
+          <google-chart [data]="chart2"
+          style="width: 115vw; margin-left: -7.5vw;"
+          ></google-chart>
+        </ion-item>
+        <ion-item lines="none" style="margin-left: 15px; margin-right: 15px">
+          <ion-label>Preferred time interval</ion-label>
+          <ion-badge style="margin-right: 5px; background-color: #3171e0;">7 pm</ion-badge>
+          <p style="margin: 0 5px 0 0; padding: 0">to</p>
+          <ion-badge style="margin-right: 10px; background-color: #3171e0;">9 pm</ion-badge>
+        </ion-item>
+      </ion-slide>
+      <ion-slide>
+        <h1>Inside activities</h1>
+        <p>home activities that fit your lifestyle</p>
+      </ion-slide>
+    </ion-slides>
+  </div>
+</ion-content>
