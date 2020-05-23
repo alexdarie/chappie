@@ -1,0 +1,303 @@
+\chapter{Experimental results}
+\pagestyle{fancy}
+% \lhead{Experimental results}
+\label{experimentalresults}
+
+\section{Data set and experimental configuration}
+
+The following application was intended to present a simple use-case for real-time data processing. It is a mobile application built on an architecture that allows us to retrain a model in real-time. Its main features are weather monitorization, fitness habits overview, and fitness trackers statistics. The part the interests us for this section is the fitness habits overview panel. Even though there are a couple of models available, for this project I used the linear regression and the logistic regression, searching for the attributes that gave me the minimum error. One great feature of this technology is that it allows you to connect a Tensorflow model and still offer the retraining capabilities.
+
+\section*{Data flow}
+
+Using the Dataflow layer I can manage to retrain a model immediately after data arrival. This solution is useful for time-sensitive applications, such as biodiversity growth and monitorization, tracking polluting agents, agricultural yield, and so on. Fitness habits are chaining with time, they become more accurate as we take into consideration only a recent sub-sample of data, they can be easily modeled as a series of messages that are passing through a data channel, so that I considered this use case a good fit for an initial discussion on mining data streams.
+
+In Figure 1 we can see the data pipeline stages through which messages are passed and analyzed. As soon as a new message arrives, an instant trigger is generated and we can call for an update on the model we currently have. Besides the pipeline, the application had a server hosted on Digital Ocean which handles the trigger and starts updating the model. When the model is retrained, a notification is sent to the application and it retrieves updated information.
+
+\section*{Data sets}
+
+The main datasets used in this project are 'Weather measurements', 'Fitness activities', and 'Habits'. They were obtained from a weather device, my Strava account, and the processing layer as a join between the first two. 
+
+\begin{figure}[!htb]
+    \centering
+    \begin{tabular}{ccc}
+        \includegraphics[width=4.5cm]{figures/faces1} &
+        \includegraphics[width=4.5cm]{figures/faces2} &
+        \includegraphics[width=4.5cm]{figures/faces3}
+    \end{tabular}
+    \caption{Weather device}
+    \label{fig:dops}
+\end{figure}
+
+In the following tables, I selected a representative row to have a better understanding of data representation inside the application. The weather attributes are collected from a Flotilla Dock which is connected to a couple of sensors (Temperature, Air Pressure, Light, and Color). A Raspberry Pi is collecting data from the dock and sending it to the PubSub layer.
+
+\begin{table}[!htb]
+  \begin{center}
+    \resizebox{\textwidth}{!}
+    {\begin{tabular}{|c|c|c|*{5}{c|}}\hline
+        \backslashbox[3.75cm]{Row\tnote{1}}{Attributes}
+        &\makebox[3em]{\textbf{Temp.}}
+        &\makebox[3em]{\textbf{Location}}
+        &\makebox[3em]{\textbf{Air pr.}}
+        &\makebox[3em]{\textbf{Light}}
+        &\makebox[3em]{\textbf{Event time}}
+        &\makebox[3em]{\textbf{Color}} \\\hline\hline
+        1 & 12.7 & 47.645995 & 9707.4 & 1 & 2020-05-15 23:52:54 & 248 \\
+        & & 26.252854 & & & & 335 \\
+        & & & & & & 462 \\ 
+        & & & & & & 1069 \\
+        \hline
+    \end{tabular}}
+    \caption{Weather}
+  \end{center}
+\end{table}
+
+In the activities table, we have more features than needed, so they will be filtered. Improvements can be made to this project, searching for other attributes that might give better results, yet it is not the purpose of this project to search for the best model. The infrastructure used behind the scenes is the main focus of this application. I am looking forward to improving the models in the following version, or maybe at a master's degree.
+
+\begin{table}[!htb]
+  \begin{center}
+    \resizebox{\textwidth}{!}
+    {\begin{tabular}{|c|*{5}{c|}}\hline
+        \backslashbox[3.75cm]{Row\tnote{1}}{Attributes}
+        &\makebox[3em]{\textbf{Athlete Id}}&\makebox[3em]{\textbf{Device Name}}&\makebox[3em]{\textbf{Max Speed}}&\makebox[3em]{\textbf{Total photo count}}\\\hline\hline
+        1 & 13703943 & Strava Android App & 2.7 & 1 \\
+        & \textbf{Athlete Count} & \textbf{Kudos Count} & \textbf{Start LatLng} & \textbf{Type} \\
+        & 1 & 12 & 47.645995 & Walk \\
+        & & & 26.252854 & \\
+        & \textbf{Timezone} & \textbf{Elev high} & \textbf{Total elevation gain} & \textbf{Start date} \\
+        & GMT+02:00 & 362.7 & 2.9 & 2020-05-07 17:50:58 \\
+        & \textbf{Name} & \textbf{Elev low} & \textbf{Average speed} & \textbf{Elapsed time} \\
+        & Evening Walk & 359.4 & 0.838 & 1094 \\
+        & \textbf{Calories} & \textbf{End LatLng} & \textbf{Moving time} & \textbf{Distance} \\
+        & 83.8 & 47.65 & 914 & 766.3 \\
+        & & & 26.252854 & \\
+        \hline
+    \end{tabular}}
+    \caption{Activities}
+  \end{center}
+\end{table}
+
+Finally, we have the fitness habits which are obtained as a join between the weather data recorded in the time interval defined by the start date and the elapsed time of every activity fetched from Strava. Activities are fetched every 10 minutes as it is a reasonable amount of time to check for updates. This table is used to predict the temperature at which a user will be most probably comfortable to run the next time when it engages in an outdoor activity.
+
+\begin{table}[!htb]
+  \begin{center}
+    \resizebox{\textwidth}{!}
+    {\begin{tabular}{|c|*{5}{c|}}\hline
+        \backslashbox[3.75cm]{Row\tnote{1}}{Attributes}
+        &\makebox[3em]{\textbf{Athlete Id}}&\makebox[3em]{\textbf{Avg. Temp.}}&\makebox[3em]{\textbf{Avg. Air Pres.}}&\makebox[3em]{\textbf{Avg. light}}\\\hline\hline
+        1 & 13703943 & 16.53 & 9751.7 & 900.0 \\
+        & \textbf{Type} & \textbf{Average speed} & \textbf{Elapsed time} & \textbf{Max Speed} \\
+        & Run & 2.344 & 1799 & 7.6 \\
+        & \textbf{Start date} & \textbf{Moving time} & \textbf{Calories} & \textbf{Distance} \\
+        & 2018-05-12 05:27:32 & 1731 & 444.9 & 4056.9 \\
+        \hline
+    \end{tabular}}
+    \caption{Habits}
+  \end{center}
+\end{table}
+
+Those being said, in the following code sections I will present a simple technique of finding the number of km one would run at any hour of a day, and the probability to run in any day of the week.
+
+\subsubsection{Selecting the candidate attribute}
+
+\begin{lstlisting}[language=SQL]
+CREATE or REPLACE MODEL fitness.hourly_activities
+OPTIONS
+  (model_type='linear_reg', labels=['distance']) AS
+
+WITH params AS ( 
+        SELECT 0 AS TRAIN, 1 AS EVAL),
+     activities AS (
+        SELECT 
+          distance,
+          EXTRACT(HOUR FROM start_date) AS hourofday,
+        FROM 
+          `savage2251.bachelor.activities`, daynames, params
+        WHERE
+          moving_time > 0 and distance > 0 
+          and type = "Run" 
+          and MOD(ABS(FARM_FINGERPRINT(CAST(start_date AS STRING))), 2) = params.TRAIN
+        ORDER BY hourofday
+)
+
+SELECT * FROM activities
+\end{lstlisting}
+
+\subsubsection{Evaluate the model and its performance}
+
+For linear regression models, I want to use a loss metric like Root Mean Square Error (RMSE). I want to keep training and improving the model until it has the lowest RMSE. In BQML, "mean\_squared\_error" is a queryable field when evaluating the trained ML model.
+
+\begin{lstlisting}[language=SQL]
+SELECT
+  SQRT(mean_squared_error) AS rmse
+FROM
+  ML.EVALUATE(
+  MODEL fitness.hourly_activities, (
+    WITH params AS ( 
+          SELECT 0 AS TRAIN, 1 AS EVAL),
+       activities AS (
+          SELECT 
+            distance,
+            EXTRACT(HOUR FROM start_date) AS hourofday,
+          FROM 
+            `savage2251.bachelor.activities`, daynames, params
+          WHERE
+            moving_time > 0 and distance > 0 
+            and type = "Run" 
+            and MOD(ABS(FARM_FINGERPRINT(CAST(start_date AS STRING))), 2) = params.EVAL
+          ORDER BY hourofday
+    )
+    SELECT * FROM activities)
+  )
+\end{lstlisting}
+
+After evaluating the model I got an RMSE of "229.20265514925313". Since I took the Root of the Mean Squared Error, a value of 2292.02 for the error can be evaluated in the same units as the distance, so it's +- 229.202 m or 0.2 km. This result was produced from 120 activities.
+
+\subsubsection{Extract the predictions}
+
+\begin{lstlisting}[language=SQL]
+SELECT
+  ROUND(predicted_distance / 1000, 2) AS predicted_distance_km, hourofday
+FROM
+  ML.PREDICT(
+  MODEL fitness.hourly_activities, (
+    WITH activities AS (
+          SELECT 
+            hour AS hourofday,
+          FROM 
+            `savage2251.fitness.hours`
+          ORDER BY hourofday
+    )
+    SELECT * FROM activities)
+  )
+\end{lstlisting}
+
+\section*{Follow-up}
+
+In the following code section is represented the best approach for predicting the ideal temperature for the next run.
+
+\begin{lstlisting}[language=SQL]
+CREATE or REPLACE MODEL fitness.temperature_habits2
+OPTIONS
+  (model_type='linear_reg', labels=['avg_temperature'], MIN_REL_PROGRESS=0.00000000001, MAX_ITERATIONS=50) AS
+
+WITH params AS ( 
+        SELECT 1 AS TRAIN, 0 AS EVAL),
+     habits AS (
+        SELECT 
+          avg_temperature,
+          avg_air_pressure,
+          EXTRACT(HOUR FROM start_date) AS hourofday,
+        FROM 
+          `savage2251.bachelor.habits`, params
+        WHERE
+          moving_time > 0 and distance > 0 
+          and type = "Run" 
+          and MOD(ABS(FARM_FINGERPRINT(CAST(start_date AS STRING))), 2) = params.TRAIN
+    )
+    
+SELECT * FROM habits;
+
+SELECT
+  mean_absolute_error AS mae,
+  mean_squared_error AS mse,
+  sqrt(mean_squared_error) AS rmse
+FROM
+  ML.EVALUATE(
+  MODEL fitness.temperature_habits2, (
+    WITH params AS ( 
+        SELECT 1 AS TRAIN, 0 AS EVAL),
+     habits AS (
+        SELECT 
+          avg_temperature,
+          avg_air_pressure,
+          EXTRACT(HOUR FROM start_date) AS hourofday,
+        FROM 
+          `savage2251.bachelor.habits`, params
+        WHERE
+          moving_time > 0 and distance > 0 
+          and type = "Run" 
+          and MOD(ABS(FARM_FINGERPRINT(CAST(start_date AS STRING))), 2) = params.EVAL
+    )
+    SELECT * FROM habits)
+);
+\end{lstlisting}
+
+To improve the model, once I evaluated the performance of the initial model, I can go back and forth, pruning or attaching new features to the old ones, so that I can get a better model. The following table depicts some of the training sessions made using the above query structure on a data set of 90 entries, with an average temperature of 16.885964818763327. This temperature value was used in the Normalized Root Mean Squared Error formula:
+
+\begin{equation}
+NRMSE = \frac{\sqrt{\frac{1}{n} * \sum_{i=1}^{n} (h_i - v_i)^2}}{\overline{v}}  
+\end{equation}
+
+Because of the small cardinality of the input data, there will be spikes in the learning rate as the spikes are an unavoidable consequence of the batch gradient descent. The average time obtained for retraining was 30 sec, yet the number of records is small. For this type of problem, data is hard to find and you have to be creative. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width = 15.5cm]{figures/scr}
+    \caption{Training results overview}
+    \label{fig:dmt}
+\end{figure}
+
+\begin{table*}[!htb]
+    \begin{threeparttable}
+    \centering
+    \begin{tabular}{|l|*{5}{c|}}\hline
+        \backslashbox[3.75cm]{Features\tnote{1}}{Metric}
+        &\makebox[4em]{MAE}&\makebox[4em]{RMSE}&\makebox[4em]{NRMSE}\\\hline\hline
+        avg\_temperature & 1.455167614937354 & 1.764866048742093 & 0.18445805160872308\\
+        avg\_light & & & \\
+        avg\_air\_pressure & & & \\
+        \hline
+        avg\_temperature & 1.4553926499599472 & 1.7668732596718175 & 0.18487786450167124\\
+        avg\_light & & & \\
+        avg\_air\_pressure & & & \\
+        hour\_of\_day & & & \\
+        \hline
+        avg\_temperature & 1.4669965285559579 & 1.7693915541191314 & 0.18540524662880356\\
+        avg\_air\_pressure & & & \\
+        hour\_of\_day & & & \\
+        \hline
+        avg\_temperature & 1.5223755795196032 & 1.8180235749497682 & 0.19573709613562956\\
+        avg\_light & & & \\
+        hour\_of\_day & & & \\
+        \hline
+        avg\_temperature & 1.5768296990172008 & 1.8456014945632473 & 0.20172047693414266\\
+        hour\_of\_day & & & \\
+        \hline
+        avg\_temperature & 1.695913670734837 & 1.92711116176165 & 0.2199316100469242\\
+        distance & & & \\
+        elapsed\_time & & & \\
+        \hline
+        avg\_temperature & 1.7430812829223297 & 2.0092247285825082 & 0.23907334009494338\\
+        distance & & & \\
+        elapsed\_time & & & \\
+        average\_speed & & & \\
+        \hline
+        avg\_temperature & 2.107113569584142 & 2.6550868230535696 & 0.4174760585856164\\
+        avg\_light & & & \\
+        avg\_air\_pressure & & & \\
+        distance & & & \\
+        elapsed\_time & & & \\
+        \hline
+        avg\_temperature & 2.118429993494259 & 2.7119587026092007 & 0.4355522520386499\\
+        avg\_light & & & \\
+        avg\_air\_pressure & & & \\
+        distance & & & \\
+        elapsed\_time & & & \\
+        hour\_of\_day & & & \\
+        \hline
+        
+    \end{tabular}
+    \begin{tablenotes}
+      \small
+      \item[1] Each row describes the set of features selected for training, and the experimental results obtained.
+    \end{tablenotes}
+\caption{Feature selection comparison}
+\label{phase2best}
+\end{threeparttable}
+\end{table*}
+
+\section{Discussions and comparison}
+
+\subsection{Linear regression}
+
+\subsection{Logistic regression}

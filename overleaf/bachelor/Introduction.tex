@@ -1,0 +1,33 @@
+\chapter*{Introduction}
+\pagestyle{fancy}
+\markboth{INTRODUCTION}{}
+\addcontentsline{toc}{chapter}{Introduction}
+\label{introduction}
+
+The rise of lightweight (wearable) sensors, data describing human activities, open up new scenarios for fascinating challenges in the field of data science. In classical statistics, the belief is that there is some true underlying shape to the data distribution that would be formed if all possible data was collected \cite{ACL}. Throughout our lives, we made our best guesses about what is the most likely data distribution that will improve life quality. How often have we tried to outperform our washing machine? Even though we have one for a long period of time, we never doubt the internal decisions it makes, even though sometimes we want a smarter washing machine.
+
+Data mining techniques can be used for either discovering new information within large datasets or for building predictive models. The nature of data produced by a sensor imposes additional burdens on data processing frameworks, with one great solution found in the concept of streaming systems - a type of data processing engine that is designed with infinite datasets in mind \cite{KurtThearling}. Allowing a machine to find patterns in our everyday life will help the average person make better decisions by approximating the risk and uncertainty when all the facts are either unknown or cannot be collected. 
+
+Modelling is simply the act of building a model in one situation where you know the answer and then applying it to another situation that you don't \cite{KurtThearling}.  While human beings have successfully developed models born from very humble beginnings of real-world problems such as business, biology and gambling, natural events are still unpredictable if the underlying data comes from our limited and very biased memory.
+
+We can think of a person asking herself if she should jog outside, but even if she checked the weather, it was not conclusive in making a decision because we cannot precisely decide whether the weather suits her activities or not. She is unsure of how running at a given temperature and dark surroundings would feel. Making her understand better her patterns or predisposition of having certain activities in a data described environment, rather than one based on common preconceptions, can improve her health, reduce material waste and make us more responsible.
+
+Habits are something that people do without actively knowing why or sometimes without even realizing they do. What usual folks call habits, a data analyst calls patterns.
+
+Despite the quantity of information we gather, in regards with people's surroundings, the questions they ask are disjoint. An average person cannot keep track of all the data in their head. Our awareness of the outside world we live in, relies on the perception we were born with - limited in some ways, and not fully understood yet in other ways. The open question is how do we harness the knowledge hidden in plain sight, among data reflecting our behaviours. 
+
+In the following chapters we are looking forward to monitoring how the weather is influencing our athletic habits, collecting data from fitness trackers, such as Strava, and one IoT device we custom built for this project. This application resembles with other challenging tasks that can have a benefit out of the following solution, such as spontaneous forest fires and deforestation, biodiversity growth and monitorization while species are on the verge of extinction, tracking polluting agents, agricultural yield, supply chains and logistics optimization in food industries, town traffic and green spaces optimization, improving energy consumption and use of renewable energy and many more. We will explore the cloud computing solutions powered by Google Cloud Platform, later used for building a data mining application, where a number of sensors are distributed in the physical world and generate streams of data that need to be combined, monitored and analyzed.
+
+In short, my approach of solving the problem of weather and athletic habits correlation analysis, will make use of data streams, cloud computing, data mining techniques, as well as a real infrastructure using Raspberry Pi and Pimoroni Flotilla sensors. I will analyze cloud services for event ingestion, ETL processing, and analytics pipelines coupled with different machine learning models such as linear regression or k-means clustering, in order to deliver data analytics. The data fields I will consider analyzing are a subset of collectable weather data, specific environment measurements of temperature, light and air pressure, and data collections obtained from Strava API. The solution running on the cloud platform will be implemented in Python 3 and will use adequate libraries like apache-beam and google-cloud. Based on the experimental results, the best model will be chosen and further developed into a mobile application built using the Ionic framework, that will also make data visualization available in a user based manner. The features of the application will be the following: 
+\begin{itemize}
+    \item{predict certain user habits (like preffered weather condition, time interval or route) in the following days}
+    \item{retrieve and show current specified weather/habit data and show past values of specified weather/habit data}
+\end{itemize}
+We will also discuss about the following topics:
+\begin{itemize}
+    \item{use additive manufacturing, more commonly known as 3D printing, as a quick and low cost alternative to the more traditional manufacturing techniques to build data source points}
+    \item{use a real infrastructure of Raspberry Pi and  Pimoroni Flotilla sensors for system deployment}
+\end{itemize}
+
+As health and fitness play a vital role in people's life, having a better understanding when it comes to our patterns, in accordance with the weather, makes a great context of study. 
+
