@@ -99,8 +99,8 @@ class WriteBatchesToGCS(beam.DoFn):
         ]
         bigquery_client.insert_rows(table, rows_to_insert)  # API request
         r = requests.get('http://161.35.76.247:4001/update-bqml-model')
-        json_data = r.json()
-        print(json_data)
+        # json_data = r.json()
+        # print(json_data)
 
 
 def run(input_topic, output_path, window_size=1.0, pipeline_args=None):
@@ -114,9 +114,9 @@ def run(input_topic, output_path, window_size=1.0, pipeline_args=None):
     with beam.Pipeline(options=pipeline_options) as pipeline:
         (
             pipeline
-            | "Read PubSub Messages" >> beam.io.ReadFromPubSub(topic=input_topic)
-            | "Window into" >> GroupWindowsIntoBatches(window_size)
-            | "Write to Firebase Realtime Database" >> beam.ParDo(WriteBatchesToGCS(output_path))
+            | "Read Weather Message" >> beam.io.ReadFromPubSub(topic=input_topic)
+            | "Check for Strava Activities & Write to DB" >> GroupWindowsIntoBatches(window_size)
+            | "Update the Model" >> beam.ParDo(WriteBatchesToGCS(output_path))
             # | "Write to file" >> beam.io.WriteToText('./results/by-minute/')
             # | 'Log results' >> beam.ParDo(PrintMessages())
         )
