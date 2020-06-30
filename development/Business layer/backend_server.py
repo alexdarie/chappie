@@ -482,7 +482,7 @@ class PreviousWeeks(Resource):
         records = [dict(row) for row in results]
         for record in records:
             q = """
-                SELECT a.rmse, b.mit, b.mat, (a.rmse / GREATEST((b.mat - b.mit), 1.0)) as nrmse  FROM (
+                SELECT a.rmse, b.mit, b.mat, ((a.rmse - b.mit) / GREATEST((b.mat - b.mit), 1.0)) as nrmse  FROM (
                   SELECT SQRT(mean_squared_error) AS rmse, 1 as id FROM
                   ML.EVALUATE( MODEL fitness.temperature_habits, (
                    WITH habits AS (
@@ -520,7 +520,8 @@ class PreviousWeeks(Resource):
                     records[i]['icon_name'] = 'remove-circle'
             else:
                 records[i]['icon_name'] = 'remove-circle'
-        records[n-1]['icon_name'] = 'close-circle'
+        if n > 0:
+            records[n-1]['icon_name'] = 'close-circle'
 
         return {'previous weeks': records}
 
