@@ -30,7 +30,9 @@ def execute_bigquery_job(q):
 
 class WeatherHabits(Resource):
     """
-        This resource is returning the weather habits as a numerical value with 2 decimals.
+        This resource is returning the weather habits as a numerical value with 2 decimals. The last
+        type of measurement return a string value representing the activity habit predicted for the
+        current weather data.
     """
 
     def __init__(self):
@@ -61,7 +63,14 @@ class WeatherHabits(Resource):
                                   avg_temperature, avg_air_pressure,
                                   EXTRACT(HOUR FROM start_date) AS hourofday,
                                 FROM `asavage2251.bachelor.habits`
-                            ) SELECT * FROM habits))"""
+                            ) SELECT * FROM habits))""",
+            "activity-type": """
+                        select predicted_type
+                        from ML.PREDICT (MODEL `fitness.habits_type`,
+                        (select (select temperature from `bachelor.weather` order by event_time desc limit 1) as avg_temperature, 
+                        (select air_pressure from `bachelor.weather` order by event_time desc limit 1) as avg_air_pressure, 
+                        (select light from `bachelor.weather` order by event_time desc limit 1) as avg_light));
+                        """
         }
 
     def get(self, measurement):
@@ -73,11 +82,17 @@ class WeatherHabits(Resource):
             return str(round(tuples[0].avg_light, 2))
         elif measurement == "air-pressure":
             return str(round(tuples[0].avg_air_pressure, 2))
+        elif measurement == "activity-type":
+            return str(tuples[0].predicted_type)
         else:
             return str(0)
 
 
 class WeatherBoundaries(Resource):
+    """
+        This resource returns the minimum and maximum values for weather measurements, used to
+        normalize data.
+    """
     def __init__(self):
         self.queries = {
             "temperature": """ select MIN(temperature) as min_temperature, MAX(temperature) as max_temperature
@@ -96,6 +111,9 @@ class WeatherBoundaries(Resource):
 
 
 class StravaUser(Resource):
+    """
+        This resources deals with the Strava user business part.
+    """
 
     @staticmethod
     def recent_activities():
@@ -124,7 +142,7 @@ class StravaUser(Resource):
             strava_format_activity = sclient.get_activity_by_id(activity.id)
             activity = strava_format_activity.to_dict()
 
-            yy = deepcopy(activity)
+            yy = deepcopy(activity) # as in activitY copY
             yy['athlete_id'] = yy['athlete']['id']
             yy.pop('athlete', None)
             normal_activities.append(yy)
@@ -195,6 +213,9 @@ class StravaUser(Resource):
 
 
 class BigQueryML(Resource):
+    """
+        This resources deals with BigQuery ML statistical models and views update.
+    """
     def __init__(self):
         self.update_models_queries = {
             "temperature": """
@@ -215,7 +236,89 @@ class BigQueryML(Resource):
                           moving_time > 0 and distance > 0
                           and type = "Run"
                           and avg_temperature is not null
-                          and MOD(ABS(FARM_FINGERPRINT(CAST(start_date AS STRING))), 2) = params.TRAIN
+                          and avg_air_pressure is not null
+                    )
+                SELECT * FROM habits;
+                CREATE or REPLACE MODEL fitness.air_pressure_habits
+                OPTIONS
+                  (model_type='linear_reg', labels=['avg_air_pressure'], MIN_REL_PROGRESS=0.00000000001, MAX_ITERATIONS=50) AS
+                
+                WITH params AS ( 
+                        SELECT 1 AS TRAIN, 0 AS EVAL),
+                     habits AS (
+                        SELECT 
+                          avg_temperature,
+                          avg_air_pressure,
+                          EXTRACT(HOUR FROM start_date) AS hourofday,
+                        FROM 
+                          `asavage2251.bachelor.habits`, params
+                        WHERE
+                          moving_time > 0 and distance > 0 
+                          and avg_temperature is not null
+                          and avg_air_pressure is not null
+                    )
+                                    
+                SELECT * FROM habits;
+                CREATE or REPLACE MODEL fitness.light_habits
+                OPTIONS
+                  (model_type='linear_reg', labels=['avg_light'], MIN_REL_PROGRESS=0.00000000001, MAX_ITERATIONS=50) AS
+                
+                WITH params AS ( 
+                        SELECT 1 AS TRAIN, 0 AS EVAL),
+                     habits AS (
+                        SELECT 
+                          avg_light,
+                          avg_air_pressure,
+                          avg_temperature,
+                          EXTRACT(HOUR FROM start_date) AS hourofday,
+                        FROM 
+                          `asavage2251.bachelor.habits`, params
+                        WHERE
+                          moving_time > 0 and distance > 0 
+                          and avg_light is not null
+                          and avg_air_pressure is not null
+                          and avg_temperature is not null
+                    )
+                    
+                SELECT * FROM habits;
+                CREATE or REPLACE MODEL fitness.habits_type
+                OPTIONS
+                  (model_type='logistic_reg', auto_class_weights=true, labels=['type'], max_iterations=10) AS
+                WITH params AS ( 
+                        SELECT 1 AS TRAIN, 0 AS EVAL),
+                     habits AS (
+                        SELECT 
+                          type,
+                          avg_temperature,
+                          avg_air_pressure,
+                          avg_light
+                        FROM 
+                          `asavage2251.bachelor.habits`, params
+                        WHERE
+                          moving_time > 0 and distance > 0 
+                          and avg_temperature is not null
+                          and avg_air_pressure is not null
+                          and avg_light is not null
+                    )
+                SELECT * FROM habits;
+                CREATE or REPLACE MODEL fitness.habits_type
+                OPTIONS
+                    (model_type='logistic_reg', auto_class_weights=true, labels=['type'], max_iterations=10) AS
+                WITH params AS (
+                    SELECT 1 AS TRAIN, 0 AS EVAL),
+                    habits AS (
+                        SELECT
+                        type,
+                        avg_temperature,
+                        avg_air_pressure,
+                        avg_light
+                    FROM
+                        `asavage2251.bachelor.habits`, params
+                    WHERE
+                    moving_time > 0 and distance > 0
+                    and avg_temperature is not null
+                    and avg_air_pressure is not null
+                    and avg_light is not null
                     )
                 SELECT * FROM habits;
             """}
@@ -286,9 +389,6 @@ class BigQueryML(Resource):
         batch = StravaUser.recent_activities()
         processed_activities = batch[0]
         activities = batch[1]
-        
-        #data = json.dumps({"notifications": [{"name": "dummy 1",}, {"name": "dummy2"}]})
-        #asyncio.run(self.produce(message=data, host='0.0.0.0', port=4000))
 
         if len(activities) > 0:
             print("Log: " + str(len(activities)) + " new activities.")
@@ -331,9 +431,6 @@ class BigQueryML(Resource):
                     v_errs = execute_bigquery_job(self.update_views_query)
 
                     if len(m_errs) == 0 and len(v_errs) == 0:
-                        # send notification
-                        data = json.dumps({"notifications": [{"name": activity['name'], "start_date": activity["start_date"]} for activity in activities]})
-                        asyncio.run(self.produce(message=data, host='0.0.0.0', port=4000))
                         return {"status": "updated"}
             return {"status": "error"}
 
@@ -343,6 +440,11 @@ class BigQueryML(Resource):
 
 
 class Predictions(Resource):
+    """
+        This resources generates data with regard to the number of km predicted to run
+        if starting at a given hour in a day, the average of the bike riding distance per
+        hour and the availability to engage in fitness activities.
+    """
     def __init__(self):
         self.queries = {
             "run": """SELECT ROUND(predicted_distance / 1000, 2) AS predicted_distance_km, hourofday
@@ -355,7 +457,7 @@ class Predictions(Resource):
                               ORDER BY hourofday
                         ) SELECT * FROM activities))""",
             "availability": """WITH daynames AS (
-                                SELECT ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] AS daysofweek),
+                                SELECT ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] AS daysofweek),
                                 total_activities AS (
                                 SELECT COUNT(*) as total FROM `asavage2251.bachelor.habits`),
                                 activities AS (
@@ -399,6 +501,10 @@ class Predictions(Resource):
 
 
 class Seasons(Resource):
+    """
+        This resource returns data about the seasons: winter, summer, spring, autumn, with
+        the associated months.
+    """
     def get(self):
         query_job = client.query("""
             SELECT COUNT(*) as count,
@@ -417,7 +523,24 @@ class Seasons(Resource):
         return {'seasons': records}
 
 
+class WeatherMeasurements(Resource):
+    """
+        This resource deals with the insert operation of weather measurements into the
+        persistence layer.
+    """
+    def post(self):
+        batch = request.get_json()
+        # The logic of this function was moved in the file "weather.py" because while
+        # presenting the application workflow, we need real weather data, which will be
+        # obtained from sensors placed on the exterior of the building.
+        return {'status': 'ok'}
+
+
 class WeatherGraph(Resource):
+    """
+        This resource returns the measurements took in the last 24 hours.
+    """
+
     def get(self):
         query_job = client.query("""
             SELECT * FROM `asavage2251.bachelor.weather`
@@ -446,6 +569,10 @@ class WeatherGraph(Resource):
 
 
 class RecentActivities(Resource):
+    """
+        This resource returns the recent fitness activities.
+    """
+
     def __init__(self):
         self.queries = {
             "run": """SELECT * FROM `asavage2251.bachelor.habits`
@@ -475,6 +602,10 @@ class RecentActivities(Resource):
 
 
 class PreviousWeeks(Resource):
+    """
+        This resource returns a summary of the previous weeks.
+    """
+    
     def get(self, noweeks):
         q = "SELECT * FROM `asavage2251.fitness.previous_weeks_grouped_by_week` WHERE week_delta <= " + noweeks + ";"
         query_job = client.query(q)
@@ -509,7 +640,9 @@ class PreviousWeeks(Resource):
             result = dict(results[0])
             record['temp_rmse'] = result['rmse']
             record['temp_nrmse'] = result['nrmse']
+        records = [x for x in records if x['temp_nrmse'] != None]
         n = len(records)
+        print(records)
         for i in range(n - 1):
             if records[i]['temp_nrmse'] is not None and records[i+1]['temp_nrmse'] is not None:
                 if records[i]['temp_nrmse'] < records[i+1]['temp_nrmse']:
@@ -541,6 +674,7 @@ api.add_resource(Predictions, '/prediction/<string:target>')
 api.add_resource(Seasons, '/seasons')
 api.add_resource(WeatherGraph, '/weather-graph')
 api.add_resource(PreviousWeeks, '/previous-weeks/<string:noweeks>')
+api.add_resource(WeatherMeasurements, '/insert-weather')
 
 
 api.init_app(app)
