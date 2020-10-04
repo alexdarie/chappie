@@ -4,8 +4,4 @@ My bachelor thesis studied data mining tools for determining the weather influen
 
 The results were visualized on a mobile application, while the hardware components were integrated into a custom-made chassis printed on a Prusa machine. A weather station was built for this project to provide accurate data sets. 
 
-![alt text](https://github.com/alexdarie/Chappie/blob/master/overleaf/figures/faces.jpg "Weather monitor")
-
 ![alt text](https://github.com/alexdarie/Chappie/blob/master/overleaf/figures/arc.jpg "Project Architecture")
-
-![alt text](https://github.com/alexdarie/Chappie/blob/master/overleaf/figures/habits_panel.jpg "Habits Panel")
