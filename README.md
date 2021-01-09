@@ -1,7 +1,5 @@
 ## Exploring the Weather Influence on Fitness Habits Using Data Mining Tools
 
-This project studied data mining tools for determining the weather influence on fitness habits, having its backbone built with GCP, to achieve asynchronous messaging, real-time retraining of statistical models, and data streams processing. 
-
-The results were visualized on a mobile application, while the hardware components were integrated into a custom-made chassis printed on a Prusa machine. A weather station was built for this project to provide accurate data sets. 
+My bachelor thesis studied the weather influence on fitness habits, using GCP to achieve asynchronous messaging, real-time retraining of statistical models, and data streams processing. The results were presented to the user on a mobile application, while the hardware components were integrated into a custom-made chassis printed on a Prusa machine.
 
 ![alt text](https://github.com/alexdarie/Chappie/blob/master/overleaf/figures/arc.jpg "Project Architecture")
